@@ -1,5 +1,11 @@
 # Template Proyek Django PBP
 
+Nama    : Eduardus Tjitrahardja
+
+NPM     : 2106653602
+
+Kelas   : D
+
 Pemrograman Berbasis Platform (CSGE602022) - diselenggarakan oleh Fakultas Ilmu Komputer Universitas Indonesia, Semester Ganjil 2022/2023
 
 *Read this in other languages: [Indonesian](README.md), [English](README.en.md)*
