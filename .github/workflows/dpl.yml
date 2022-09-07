@@ -26,6 +26,8 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: '2.7'
+    - name: Load Data
+    - run: python manage.py loaddata initial_wishlist_data.json
     - name: Install dpl
       run: gem install dpl
     - name: Deploy to Heroku
