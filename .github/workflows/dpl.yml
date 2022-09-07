@@ -40,5 +40,3 @@ jobs:
         # subdomain.
         target_url: https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com
         environment: production
-    - name: Load Data
-      run: python manage.py loaddata initial_wishlist_data.json
