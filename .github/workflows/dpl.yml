@@ -31,8 +31,6 @@ jobs:
     - name: Deploy to Heroku
       run: dpl --provider=heroku --app=$HEROKU_APP_NAME --api-key=$HEROKU_API_KEY
     - uses: chrnorm/deployment-action@releases/v1
-    - name: Load Data
-      run: python manage.py loaddata initial_wishlist_data.json
       name: Create GitHub deployment
       with:
         initial_status: success
@@ -42,3 +40,5 @@ jobs:
         # subdomain.
         target_url: https://${{ secrets.HEROKU_APP_NAME }}.herokuapp.com
         environment: production
+    - name: Load Data
+      run: python manage.py loaddata initial_wishlist_data.json
