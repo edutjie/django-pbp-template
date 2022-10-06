@@ -1,0 +1,113 @@
+{% extends 'base.html' %} {% block content %}
+
+<script>
+  $(document).ready(function () {
+    $.get("{% url 'wishlist:show_json' %}", function (data) {
+      $.each(data, function (index, value) {
+        $("#table-wishlist").append(
+          "<tr><td>" +
+            value.fields.nama_barang +
+            "</td><td>" +
+            value.fields.harga_barang +
+            "</td><td>" +
+            value.fields.deskripsi +
+            "</td></tr>"
+        );
+      });
+    });
+
+    $("#wishlist-form").submit(function (e) {
+      e.preventDefault();
+      var nama_barang = $("#nama_barang").val();
+      var harga_barang = parseInt($("#harga_barang").val());
+      var deskripsi = $("#deskripsi").val();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'wishlist:add_wishlist' %}",
+        data: {
+          nama_barang: nama_barang,
+          harga_barang: harga_barang,
+          deskripsi: deskripsi,
+        },
+        success: function (response) {
+          $("#table-wishlist").append(
+            "<tr><td>" +
+              nama_barang +
+              "</td><td>" +
+              harga_barang +
+              "</td><td>" +
+              deskripsi +
+              "</td></tr>"
+          );
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
+    });
+  });
+</script>
+
+<div class="container-md min-vh-100 d-flex item-align-center gap-5">
+  <div class="my-auto mx-auto">
+    <h3>Add Wishlist</h3>
+    <form method="post" id="wishlist-form">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="nama_barang" class="form-label">Nama Barang</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Masukkan nama barang"
+          name="nama_barang"
+          id="nama_barang"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="harga_barang" class="form-label">Harga Barang</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Masukkan harga barang"
+          name="harga_barang"
+          id="harga_barang"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="deskripsi" class="form-label">Deskripsi</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Masukkan deskripsi barang"
+          name="deskripsi"
+          id="deskripsi"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+  <div class="my-auto w-100">
+    <div class="d-flex gap-3 mb-3">
+      <h5>Nama:</h5>
+      <span class="badge bg-secondary"><h6>{{nama}}</h6></span>
+    </div>
+
+    <table class="table table-hover" id="table-wishlist">
+      <tr class="table-primary">
+        <th>Nama Barang</th>
+        <th>Harga Barang</th>
+        <th>Deskripsi</th>
+      </tr>
+    </table>
+    <h6 class="alert alert-info">Sesi terakhir login: {{ last_login }}</h6>
+    <button class="btn btn-outline-primary">
+      <a
+        href="{% url 'wishlist:logout' %}"
+        class="text-decoration-none text-blue"
+        >Logout</a
+      >
+    </button>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from wishlist.models import BarangWishlist
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 data_barang_wishlist = BarangWishlist.objects.all()
 
@@ -17,7 +18,7 @@ def show_wishlist(request):
     context = {
         "list_barang": data_barang_wishlist,
         "nama": "Eduardus Tjitrahardja",
-        "last_login": request.COOKIES.get('last_login'),
+        "last_login": request.COOKIES.get("last_login"),
     }
     return render(request, "wishlist.html", context)
 
@@ -89,3 +90,27 @@ def logout_user(request):
     response = HttpResponseRedirect(reverse("wishlist:login"))
     response.delete_cookie("last_login")
     return response
+
+
+@login_required(login_url="/wishlist/login/")
+def show_wishlist_ajax(request):
+    context = {
+        "nama": "Eduardus Tjitrahardja",
+        "last_login": request.COOKIES.get("last_login"),
+    }
+    return render(request, "wishlist_ajax.html", context)
+
+
+@csrf_exempt
+@login_required(login_url="/wishlist/login/")
+def add_wishlist(request):
+    if request.method == "POST":
+        nama_barang = request.POST.get("nama_barang")
+        print(nama_barang)
+        harga_barang = request.POST.get("harga_barang")
+        deskripsi = request.POST.get("deskripsi")
+        BarangWishlist.objects.create(
+            nama_barang=nama_barang, harga_barang=harga_barang, deskripsi=deskripsi
+        )
+        JsonResponse({}, status=200)
+    return redirect("wishlist:show_wishlist_ajax")
