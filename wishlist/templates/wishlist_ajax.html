@@ -30,6 +30,7 @@
           deskripsi: deskripsi,
         },
         success: function (response) {
+          $("#wishlist-form").trigger('reset');
           $("#table-wishlist").append(
             "<tr><td>" +
               nama_barang +
